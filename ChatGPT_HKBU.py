@@ -1,5 +1,6 @@
 import configparser
 import requests
+import os
 
 class HKBU_ChatGPT():
     def __init__(self,config_='./config.ini'):
@@ -23,6 +24,8 @@ class HKBU_ChatGPT():
 
 
 if __name__ == '__main__':
+    # 更改当前工作目录到脚本所在目录
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     ChatGPT_test = HKBU_ChatGPT()
 
     while True:

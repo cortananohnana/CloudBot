@@ -3,22 +3,32 @@ from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
                           CallbackContext)
 import configparser
 import logging
-import redis
 from ChatGPT_HKBU import HKBU_ChatGPT
 import os
+import mysql.connector
 
 # 更改当前工作目录到脚本所在目录
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-global redis1
 def main():
     # Load your token and create an Updater for your Bot
     config = configparser.ConfigParser()
     config.read('config.ini')
     updater = Updater(token=(config['TELEGRAM']['ACCESS_TOKEN']), use_context=True)
     dispatcher = updater.dispatcher
-    global redis1
-    redis1 = redis.Redis(host=(config['REDIS']['HOST']), password=(config['REDIS']['PASSWORD']), port=(config['REDIS']['REDISPORT']))
-   
+    sql_config = {
+    'user': config.get('mysql', 'user'),
+    'password': config.get('mysql', 'password'),
+    'host': config.get('mysql', 'host'),
+    'database': config.get('mysql', 'database')
+}   
+    # 连接到数据库
+    try:
+        conn = mysql.connector.connect(**sql_config)
+        print('数据库连接成功')
+
+    except mysql.connector.Error as err:
+        print(f'数据库连接错误: {err}')
+        
     # You can set this logging module, so you will know when and why things do not work as expected Meanwhile, update your config.ini as:
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     
@@ -66,14 +76,7 @@ def help_command(update: Update, context: CallbackContext) -> None:
 
 def add(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /add is issued."""
-    try:
-        global redis1
-        logging.info(context.args[0])
-        msg = context.args[0]   # /add keyword <-- this should store the keyword
-        redis1.incr(msg)
-        update.message.reply_text('You have said ' + msg +  ' for ' + redis1.get(msg).decode('UTF-8') + ' times.')
-    except (IndexError, ValueError):
-        update.message.reply_text('Usage: /add <keyword>')
+    pass
 
 
 
