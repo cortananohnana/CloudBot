@@ -21,6 +21,7 @@ def main():
     'host': config.get('mysql', 'host'),
     'database': config.get('mysql', 'database')
 }   
+    # db4free database
     # 连接到数据库
     try:
         conn = mysql.connector.connect(**sql_config)
