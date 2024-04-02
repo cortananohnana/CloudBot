@@ -25,6 +25,7 @@ def main():
     # 连接到数据库
     try:
         conn = mysql.connector.connect(**sql_config)
+        cursor = conn.cursor()
         print('数据库连接成功')
 
     except mysql.connector.Error as err:
@@ -44,8 +45,8 @@ def main():
     dispatcher.add_handler(chatgpt_handler)
 
     # on different commands - answer in Telegram
-    dispatcher.add_handler(CommandHandler("add", add))
-    dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(CommandHandler("state", ShowState))
+    
     
     # To start the bot:
     updater.start_polling()
@@ -70,14 +71,8 @@ def equiped_chatgpt(update, context):
 
 # Define a few command handlers. These usually take the two arguments update and
 # context. Error handlers also receive the raised TelegramError object in error.
-def help_command(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /help is issued."""
+def ShowState(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Helping you helping you.')
-
-
-def add(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /add is issued."""
-    pass
 
 
 
