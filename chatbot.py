@@ -62,7 +62,7 @@ def echo(update, context):
 
 def equiped_chatgpt(update, context): 
     global chatgpt
-    reply_message = chatgpt.submit(update.message.text + "Recommend similar music to me.")
+    reply_message = chatgpt.submit(update.message.text + "Recommend similar or relevent songs to me.")
     logging.info("Update: " + str(update))
     logging.info("context: " + str(context))
     context.bot.send_message(chat_id=update.effective_chat.id, text=reply_message)
